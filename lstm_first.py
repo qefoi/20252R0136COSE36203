@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 start_date = "20130101"
 end_date = "20241231"
 ticker_code = "005930" 
-window_size = 2
+window_size = 5
 TIMESTEPS = 10
 
 # 재현성 확보
@@ -114,7 +114,7 @@ history = model.fit(
     epochs=50, 
     batch_size=32,
     validation_split=0.1, # 학습 데이터 중 10%를 검증에 사용
-    verbose=1
+    verbose=0
 )
 
 # 예측 실행
@@ -150,12 +150,12 @@ for col in target_cols:
     display_name = col.replace('target_', '').replace('_chg', '').upper()
     report_data.append([f"Next {display_name}", f"{rmse:.4f}", f"{r2:.6f}"])
 
+headers = ["예측 항목", "RMSE (변화율)", "R-squared (변화율)"]
+print(tabulate.tabulate(report_data, headers=headers, tablefmt="markdown"))
 # 시각화
 
 fig, axes = plt.subplots(5, 1, figsize=(16, 15), sharex=True)
-plt.suptitle(f'LSTM Multi-Output: Actual vs. Predicted Change Rate (%) - Timesteps={TIMESTEPS}', fontsize=16)
-
-plot_titles = ['Open Price Change (%)', 'High Price Change (%)', 'Low Price Change (%)', 'Close Price Change (%)', 'Volume Log Change']
+plot_titles = ['Open Change (%)', 'High Change (%)', 'Low Change (%)', 'Close Change (%)', 'Volume Log Change']
 
 for i, col in enumerate(target_cols):
     ax = axes[i]

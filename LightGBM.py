@@ -30,7 +30,7 @@ data['lower_shadow'] = (data[['open', 'close']].min(axis=1) - data['low']) / dat
 data['body_ratio'] = abs(data['close'] - data['open']) / (data['high'] - data['low'])
 data['shadow_ratio'] = (data['upper_shadow'] - data['lower_shadow']) / ((data['high'] - data['low']) / data['open'] * 100)
 data['direction'] = np.sign(data['close'] - data['open'])
-data['volume_strength'] = data['volume'] / data['volume'].rolling(window_size).mean()
+data['volume_strength'] = data['volume'] / data['volume'].rolling(5).mean()
 data['momentum'] = (data['close'] - data['close'].shift(1)) / data['close'].shift(1) * 100
 
 # 다음 날 OHLCV 레벨 정의
@@ -171,25 +171,19 @@ for i, col in enumerate(target_cols):
 
 
 print("\n" + "=" * 80)
-print("LightGBM 테스트셋 결과 (순수 변화율 기준)")
+print("LightGBM (change)")
 print("=" * 80)
 
 headers = ["예측 항목", "RMSE (변화율)", "R-squared (변화율)"]
 print("### 각 항목별 예측 오차 및 설명력 ###")
 print(tabulate.tabulate(report_data, headers=headers, tablefmt="markdown"))
 
-print("\n--- 통계적 해석 주의사항 ---")
-print("1. Condition Number: LightGBM은 트리 기반 비선형 모델이므로, OLS의 통계적 안정성 지표인 Condition Number를 계산하지 않으며 해당 개념이 적용되지 않습니다.")
-print("2. R-squared: 값이 0에 가까워도 OLS와 달리 모델이 무의미하다는 뜻은 아니지만, 주식 변화율 예측이 매우 어렵다는 것을 시사합니다.")
-
-
 # --- 7. 시각화 (5개 변수 전체 변화율 비교) ---
 
 fig, axes = plt.subplots(5, 1, figsize=(16, 15), sharex=True)
-plt.suptitle('LightGBM Multi-Output: Actual vs. Predicted Change Rate (%)', fontsize=16)
 
 # Volume은 Log Change이므로 별도의 이름 사용
-plot_titles = ['Open Price Change (%)', 'High Price Change (%)', 'Low Price Change (%)', 'Close Price Change (%)', 'Volume Log Change']
+plot_titles = ['Open Change (%)', 'High Change (%)', 'Low Change (%)', 'Close Change (%)', 'Volume Log Change']
 
 for i, col in enumerate(target_cols):
     ax = axes[i]

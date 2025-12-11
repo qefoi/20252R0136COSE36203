@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 start_date = "20130101"
 end_date = "20241231"
 ticker_code = "005930" # 삼성전자
-window_size = 1
+window_size = 2
 
 
 OHLCV = stock.get_market_ohlcv_by_date(start_date, end_date, ticker_code)
