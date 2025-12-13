@@ -1,7 +1,7 @@
 # pip install pykrx lightgbm scikit-learn pandas numpy matplotlib
 
 from pykrx import stock
-from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn.preprocessing import StandardScaler
 from lightgbm import LGBMClassifier
 import pandas as pd
@@ -67,13 +67,17 @@ y_pred_proba = model.predict_proba(X_test_scaled)[:, 1]
 y_pred = (y_pred_proba > 0.5).astype(int)
 
 acc = accuracy_score(y_test, y_pred)
-roc = roc_auc_score(y_test, y_pred_proba)
 cm = confusion_matrix(y_test, y_pred)
 
+print("\n" + "="*40)
+print(f"  [ LightGBM 모델 예측 결과 ]")
+print("="*40)
 print(f"Accuracy: {acc:.4f}")
-print(f"ROC-AUC: {roc:.4f}")
-print("-" * 30)
-print(f"Confusion Matrix:\n{cm}")
+print("\nConfusion Matrix:")
+print(f"TN(하락 맞춤): {cm[0][0]} | FP(틀린 상승): {cm[0][1]}")
+print(f"FN(틀린 하락): {cm[1][0]} | TP(상승 맞춤): {cm[1][1]}")
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred, target_names=['Fall', 'Rise']))
 
 # 결과 시각화
 plt.figure(figsize=(14, 6))

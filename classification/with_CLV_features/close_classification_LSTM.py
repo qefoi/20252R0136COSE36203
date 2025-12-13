@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from pykrx import stock
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
-from sklearn.metrics import roc_auc_score
 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
@@ -144,12 +143,3 @@ plt.legend()
 
 plt.tight_layout()
 plt.show()
-
-# for ROC-AUC Score
-y_pred_proba = model.predict(X_test).flatten()
-
-roc_score = roc_auc_score(y_test, y_pred_proba)
-
-print("\n" + "="*40)
-print(f"ROC-AUC Score: {roc_score:.4f}")
-print("="*40)
